@@ -18,6 +18,7 @@ class YandexMap extends Component {
         clusterOptions: PropTypes.object,
         state: PropTypes.object,
         coordorder: PropTypes.oneOf(['latlong', 'longlat']),
+        apiLoadParameters: PropTypes.object,
         options: PropTypes.object
     }
 
@@ -32,6 +33,7 @@ class YandexMap extends Component {
             controls: []
         },
         options: {},
+        apiLoadParameters: {},
         style: {
             position: 'relative'
         }
@@ -103,7 +105,7 @@ class YandexMap extends Component {
     }
 
     _getAPIParams () {
-        const params = {}
+        const params = this.props.apiLoadParameters;
 
         if (this.props.coordorder) {
             params.coordorder = this.props.coordorder;
