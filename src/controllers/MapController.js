@@ -19,9 +19,11 @@ class MapController {
     appendMarker (marker) {
         if (this._clusterEnabled) {
             this._cluster.add(marker.getAPIInstance());
+            marker.setClusterBalloonState(marker.balloonState, this._cluster);
             this._map.setBounds(this._cluster.getBounds());
         } else {
             this._geoCollection.add(marker.getAPIInstance());
+            marker.setBalloonState(marker.balloonState);
             this._map.setBounds(this._geoCollection.getBounds());
         }
     }
