@@ -69,7 +69,11 @@ class MapMarker extends Component {
 
     componentWillUnmount () {
         this._clearLayouts();
-        this._controller.destroy();
+        if(this.context.mapController._clusterEnabled) {
+            this._controller.destroyOnCluster(this.context.mapController._cluster);
+        } else {
+            this._controller.destroy();
+        }
     }
 
     getController () {

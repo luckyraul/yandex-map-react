@@ -103,6 +103,12 @@ class MarkerController {
         this._marker = null;
     }
 
+    destroyOnCluster(cluster) {
+        this.events.removeAll();
+        cluster.remove(this._marker);
+        this._marker = null;
+    }
+
     _setupMarkerProperties () {
         const {properties} = this;
         Object.keys(properties).forEach(propName => {
