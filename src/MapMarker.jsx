@@ -6,6 +6,7 @@ import {eventsDecorator} from './utils/decorators';
 
 class MapMarker extends Component {
     static propTypes = {
+        balloonState: PropTypes.oneOf(['opened', 'closed']),
         lat: PropTypes.number.isRequired,
         lon: PropTypes.number.isRequired,
         properties: PropTypes.object,
@@ -18,13 +19,17 @@ class MapMarker extends Component {
         clusterController: PropTypes.object,
     }
 
+    static defaultProps = {
+        balloonState: 'closed'
+    }
+
     constructor (props) {
         super(props);
         this.options = {};
     }
 
     componentDidUpdate (prevProps) {
-        const {lat, lon, children, properties, options} = this.props;
+        const {lat, lon, children, properties, options, balloonState} = this.props;
 
         if (lat !== prevProps.lat || lon !== prevProps.lon) {
             this._controller.setPosition([lat, lon]);
@@ -42,6 +47,15 @@ class MapMarker extends Component {
             }
         });
 
+        if(this.context.cluster) {
+            if (balloonState !== prevProps.balloonState && prevProps.balloonState === 'opened') {
+                this.context.clusterController.closeBalloon();
+            }
+            this.context.clusterController.setBalloonState(this._controller, balloonState);
+        } else {
+            this._controller.setBalloonState(balloonState);
+        }
+
         if (children != prevProps.children) {
             this._clearLayouts();
             this._setupLayouts();
@@ -49,9 +63,9 @@ class MapMarker extends Component {
     }
 
     componentDidMount () {
-        const {lat, lon, properties, options} = this.props;
+        const {lat, lon, properties, options, balloonState} = this.props;
 
-        this._controller = new MarkerController([lat, lon], properties, options);
+        this._controller = new MarkerController([lat, lon], properties, options, balloonState);
         this._setupLayouts();
         this._setupEvents();
 

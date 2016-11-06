@@ -16,6 +16,7 @@ class MapController {
 
     appendMarker (marker) {
         this._geoCollection.add(marker.getAPIInstance());
+        marker.setBalloonState(marker.balloonState);
         this._map.setBounds(this._geoCollection.getBounds());
     }
 
